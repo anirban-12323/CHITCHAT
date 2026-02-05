@@ -1,8 +1,14 @@
 import React from "react";
 import { FaSearch } from "react-icons/fa";
 import User from "./User";
+import { useDispatch } from "react-redux";
+import { logoutUserThunk } from "../../store/slice/user/userThunk";
 
 function UserSideBar() {
+  const dispatch = useDispatch();
+  const handleLogout = async () => {
+    await dispatch(logoutUserThunk());
+  };
   return (
     <div className="max-w-[20rem] w-full  h-screen flex flex-col border-r-white">
       {/* //app name */}
@@ -29,16 +35,7 @@ function UserSideBar() {
         <User />
         <br />
         <User />
-        <br />
-        <User />
-        <br />
-        <User />
-        <br />
-        <User />
-        <br />
-        <User />
-        <br />
-        <User />
+
         <br />
         <User />
         <br />
@@ -50,7 +47,9 @@ function UserSideBar() {
             <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
           </div>
         </div>
-        <button class="btn btn-primary btn-sm">Logout</button>
+        <button onClick={handleLogout} class="btn btn-primary btn-sm">
+          Logout
+        </button>
       </div>
     </div>
   );

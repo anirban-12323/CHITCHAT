@@ -5,9 +5,9 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 // THIS IS REGISTER CONTROLLER
 export const register = asyncHandler(async (req, res, next) => {
-  const { fullName, username, password, gender } = req.body;
+  const { fullname, username, password, gender } = req.body;
 
-  if (!fullName || !username || !password || !gender) {
+  if (!fullname || !username || !password || !gender) {
     return next(new errorHandler("All fields are required", 400));
   }
 
@@ -23,7 +23,7 @@ export const register = asyncHandler(async (req, res, next) => {
   const avatar = `https://avatar.iran.liara.run/public/${avatarType}?username=${username}`;
 
   const newUser = await User.create({
-    fullName,
+    fullname,
     username,
     password: hashedPassword,
     gender,
@@ -37,13 +37,13 @@ export const register = asyncHandler(async (req, res, next) => {
   });
   res
     .status(200)
-    .cookie("token", {
+    .cookie("token", token, {
       expires: new Date(
         Date.now() + process.env.COOKIE_EXPIRE * 24 * 60 * 60 * 1000,
       ),
       httpOnly: true,
       secure: false,
-      sameSite: "None",
+      sameSite: "Lax",
     })
     .json({
       success: true,
@@ -88,13 +88,13 @@ export const login = asyncHandler(async (req, res, next) => {
 
   res
     .status(200)
-    .cookie("token", {
+    .cookie("token", token, {
       expires: new Date(
         Date.now() + process.env.COOKIE_EXPIRE * 24 * 60 * 60 * 1000,
       ),
       httpOnly: true,
       secure: false,
-      sameSite: "None",
+      sameSite: "Lax",
     })
     .json({
       success: true,
@@ -103,4 +103,47 @@ export const login = asyncHandler(async (req, res, next) => {
         token,
       },
     });
+});
+
+//THIS LOGOUT CONTROLLER
+export const logout = asyncHandler(async (req, res, next) => {
+  res
+    .status(200)
+    .cookie("token", "", {
+      expires: new Date(Date.now()),
+      httpOnly: true,
+    })
+    .json({
+      success: true,
+      message: "logout successfull..",
+    });
+});
+
+// THIS IS GETPROFILE CONTROLLER
+
+export const getProfile = asyncHandler(async (req, res, next) => {
+  if (!req.user) {
+    res.status(401).json({
+      success: false,
+      message: "Not logged in",
+    });
+  }
+  const userId = req.user._id;
+  console.log(userId);
+
+  const profile = await User.findById(userId);
+  res.status(200).json({
+    success: true,
+    responseData: profile,
+  });
+});
+
+//THIS IS GETOTHERUSER CONTROLLER
+
+export const getOtherUsers = asyncHandler(async (req, res, next) => {
+  const otherUsers = await User.find({ _id: { $ne: req.user._id } });
+  res.status(200).json({
+    success: true,
+    responseData: otherUsers,
+  });
 });

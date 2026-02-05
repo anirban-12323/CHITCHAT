@@ -1,15 +1,51 @@
+// import { createRoot } from "react-dom/client";
+// import { BrowserRouter } from "react-router-dom";
+// import { store } from "./store/store.js";
+// import { Provider } from "react-redux";
+// import "./index.css";
+
+// import App from "./App.jsx";
+
+// createRoot(document.getElementById("root")).render(
+//   <Provider store={store}>
+//     <BrowserRouter>
+//       <App />
+//     </BrowserRouter>
+//   </Provider>,
+// );
 import { createRoot } from "react-dom/client";
-import { BrowserRouter } from "react-router-dom";
+import "./index.css";
+import App from "./App.jsx";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Home from "./pages/home/Home.jsx";
+import Login from "./pages/authentication/Login.jsx";
+import Signup from "./pages/authentication/Signup.jsx";
 import { store } from "./store/store.js";
 import { Provider } from "react-redux";
-import "./index.css";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
-import App from "./App.jsx";
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: (
+      <ProtectedRoute>
+        <Home />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "/signup",
+    element: <Signup />,
+  },
+]);
 
 createRoot(document.getElementById("root")).render(
   <Provider store={store}>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <App />
+    <RouterProvider router={router} />
   </Provider>,
 );
