@@ -4,16 +4,23 @@ import {
   registerUserThunk,
   logoutUserThunk,
   getUserProfileThunk,
+  getOtherUserThunk,
 } from "./userThunk";
 
 export const userSlice = createSlice({
   name: "user",
   initialState: {
     isAuthenticated: false,
+    otherUser: null,
+    selectedUser: null,
     screenLoading: true,
     userProfile: null,
   },
-  reducers: {},
+  reducers: {
+    setSelectedUser: (state, action) => {
+      state.selectedUser = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     // LOGIN
     builder.addCase(loginUserThunk.pending, (state) => {
@@ -64,7 +71,7 @@ export const userSlice = createSlice({
       console.log("PROFILE → fulfilled", action.payload);
 
       state.isAuthenticated = true;
-      state.userProfile = action.payload.responseData; // 🔥 THIS WAS MISSING
+      state.userProfile = action.payload?.responseData; // 🔥 THIS WAS MISSING
       state.screenLoading = false;
     });
 
@@ -75,7 +82,26 @@ export const userSlice = createSlice({
       state.isAuthenticated = false;
       state.userProfile = null;
     });
+
+    // GET OTHER USER
+    builder.addCase(getOtherUserThunk.pending, (state) => {
+      console.log("OTHER USER → pending");
+      state.screenLoading = true;
+    });
+
+    builder.addCase(getOtherUserThunk.fulfilled, (state, action) => {
+      console.log("OTHER USER → fulfilled", action.payload);
+
+      state.otherUser = action.payload?.responseData; // 🔥 THIS WAS MISSING
+      state.screenLoading = false;
+    });
+
+    builder.addCase(getOtherUserThunk.rejected, (state) => {
+      console.log("OTHER USER → REJECTED");
+
+      state.screenLoading = false;
+    });
   },
 });
-
+export const { setSelectedUser } = userSlice.actions;
 export default userSlice.reducer;

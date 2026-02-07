@@ -3,12 +3,16 @@ import { FaUserAlt } from "react-icons/fa";
 import { FaKey } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { registerUserThunk } from "../../store/slice/user/userThunk";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
+import { useEffect } from "react";
 
 const SignUp = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { isAuthenticated } = useSelector((state) => {
+    return state.userReducer;
+  });
   const [signupData, setSignUpData] = useState({
     fullname: "",
     username: "",
@@ -30,6 +34,11 @@ const SignUp = () => {
       navigate("/");
     }
   };
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/");
+    }
+  }, [isAuthenticated]);
   return (
     <div className="flex justify-center items-center p-6  min-h-screen">
       <div className="max-w-[40rem] w-full  flex flex-col gap-5 bg-base-200 p-6 rounded-lg">

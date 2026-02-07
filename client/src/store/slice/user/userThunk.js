@@ -74,21 +74,33 @@ export const getUserProfileThunk = createAsyncThunk(
   "user/getProfile",
   async (_, { rejectWithValue }) => {
     try {
-      console.log("🚀 GET PROFILE - Starting API call...");
       const response = await axiosInstance.get("/user/get-profile");
-      console.log("✅ GET PROFILE - Response received:", response);
-      console.log("📦 GET PROFILE - Response data:", response.data);
-      console.log("👤 GET PROFILE - User data:", response.data.responseData);
+
       return response.data;
     } catch (error) {
       console.error(error);
       // const errorOutput = error?.response?.data?.errMessage;
       //toast.error(errorOutput);
 
-      console.error("❌ GET PROFILE - Error caught:", error);
-      console.error("❌ GET PROFILE - Error response:", error?.response);
-      console.error("❌ GET PROFILE - Error data:", error?.response?.data);
-      console.error("❌ GET PROFILE - Error status:", error?.response?.status);
+      return rejectWithValue(null);
+    }
+  },
+);
+
+//get Other Users
+
+export const getOtherUserThunk = createAsyncThunk(
+  "user/getOtherUser",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get("/user/get-other-users");
+
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      // const errorOutput = error?.response?.data?.errMessage;
+      //toast.error(errorOutput);
+
       return rejectWithValue(null);
     }
   },

@@ -3,12 +3,16 @@ import { FaUserAlt } from "react-icons/fa";
 import { FaKey } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { loginUserThunk } from "../../store/slice/user/userThunk";
+import { useEffect } from "react";
 const Login = () => {
   const dispatch = useDispatch();
   const [loginData, setLoginData] = useState({ username: "", password: "" });
+  const { isAuthenticated } = useSelector((state) => {
+    return state.userReducer;
+  });
 
   const handleInputChange = (e) => {
     setLoginData((prev) => ({
@@ -26,6 +30,11 @@ const Login = () => {
       toast.error(err || "Login failed");
     }
   };
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/");
+    }
+  }, [isAuthenticated]);
 
   return (
     <div className="flex justify-center items-center p-6  min-h-screen">

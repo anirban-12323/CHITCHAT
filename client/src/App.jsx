@@ -44,18 +44,28 @@
 import { useEffect } from "react";
 import "./App.css";
 import { Toaster } from "react-hot-toast";
-import { useDispatch } from "react-redux";
-import { getUserProfileThunk } from "./store/slice/user/userThunk";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getOtherUserThunk,
+  getUserProfileThunk,
+} from "./store/slice/user/userThunk";
 
 function App() {
   const dispatch = useDispatch();
-
+  const { isAuthenticated } = useSelector((state) => state.userReducer);
   useEffect(() => {
     (async () => {
+      console.log("🏠 Home mounted - Fetching profile");
       await dispatch(getUserProfileThunk());
     })();
-  }, []);
+  }, [dispatch]);
 
+  useEffect(() => {
+    if (isAuthenticated) {
+      console.log("👥 Profile loaded - Fetching other users");
+      dispatch(getOtherUserThunk());
+    }
+  }, [isAuthenticated, dispatch]);
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />

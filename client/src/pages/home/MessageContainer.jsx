@@ -1,36 +1,47 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Message from "./Message";
 import User from "./User";
-import { IoMdSend } from "react-icons/io";
+
+import { useDispatch, useSelector } from "react-redux";
+import { getMessageThunk } from "../../store/slice/message/messageThunk";
+import { setSelectedUser } from "../../store/slice/user/userSlice";
+import SendMessage from "./SendMessage";
 
 function MessageContainer() {
+  const { selectedUser } = useSelector((state) => state.userReducer);
+  const { messages } = useSelector((state) => state.messageReducer);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (selectedUser?._id) {
+      dispatch(getMessageThunk({ otherParticipantId: selectedUser?._id }));
+    }
+  }, [selectedUser]);
   return (
-    <div className="h-screen w-full flex flex-col">
-      <div className="p-3 border-b-white/10">
-        <User />
-      </div>
+    <>
+      {!selectedUser ? (
+        <div>please select a user</div>
+      ) : (
+        <div className="h-screen w-full flex flex-col">
+          <div className="p-3 border-b-white/20">
+            <User userDetails={selectedUser} />
+          </div>
 
-      <div className=" h-full overflow-y-auto p-3">
-        <Message />
-        <Message />
-        <Message />
-        <Message />
-        <Message />
-        <Message />
-        <Message />
-      </div>
-
-      <div className="w-full p-3 flex gap-2">
-        <input
-          type="text"
-          placeholder="Type here"
-          class="input input-bordered input-primary w-full"
-        />
-        <button class="btn btn-square btn-outline btn-primary">
-          <IoMdSend />
-        </button>
-      </div>
-    </div>
+          <div className=" h-full overflow-y-auto p-3">
+            {messages?.map((messageDetails) => {
+              return (
+                <Message
+                  key={messageDetails._id}
+                  messageDetails={messageDetails}
+                />
+              );
+            })}
+          </div>
+          <SendMessage></SendMessage>
+        </div>
+      )}
+    </>
   );
 }
 

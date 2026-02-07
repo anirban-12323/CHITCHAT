@@ -1,11 +1,13 @@
 import React from "react";
 import { FaSearch } from "react-icons/fa";
 import User from "./User";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logoutUserThunk } from "../../store/slice/user/userThunk";
 
 function UserSideBar() {
   const dispatch = useDispatch();
+
+  const { otherUser } = useSelector((state) => state.userReducer);
   const handleLogout = async () => {
     await dispatch(logoutUserThunk());
   };
@@ -23,23 +25,10 @@ function UserSideBar() {
           <FaSearch />
         </label>
       </div>
-      <div className="h-full  overflow-y-auto  px-3">
-        <User />
-        <br />
-        <User />
-        <br />
-        <User />
-        <br />
-        <User />
-        <br />
-        <User />
-        <br />
-        <User />
-
-        <br />
-        <User />
-        <br />
-        <User />
+      <div className="h-full  overflow-y-auto  px-3 flex flex-col gap-3">
+        {otherUser?.map((userDetails) => {
+          return <User key={userDetails._id} userDetails={userDetails} />;
+        })}
       </div>
       <div className="flex  items-center justify-between p-3 border-r-black">
         <div class="avatar">
