@@ -129,7 +129,6 @@ export const getProfile = asyncHandler(async (req, res, next) => {
     });
   }
   const userId = req.user._id;
-  console.log(userId);
 
   const profile = await User.findById(userId);
   res.status(200).json({

@@ -21,7 +21,12 @@ function MessageContainer() {
   return (
     <>
       {!selectedUser ? (
-        <div>please select a user</div>
+        <div className="w-full flex items-center justify-center flex-col gap-5">
+          <h2>Welcome to CHITCHAT</h2>
+          <p className="text-xl">
+            Please select a person to continue your chat !!
+          </p>
+        </div>
       ) : (
         <div className="h-screen w-full flex flex-col">
           <div className="p-3 border-b-white/20">

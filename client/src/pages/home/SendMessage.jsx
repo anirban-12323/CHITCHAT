@@ -8,8 +8,6 @@ function SendMessage() {
   const [message, setMessage] = useState("");
 
   const handleSendMessage = () => {
-    console.log("hello");
-    console.log(message);
     dispatch(sendMessageThunk({ receiverId: selectedUser?._id, message }));
     setMessage("");
   };

@@ -1,3 +1,4 @@
+import { app, server } from "./socket/socket.js";
 import dotenv from "dotenv";
 // kD7NT1ntvWWtWiI5
 dotenv.config();
@@ -10,7 +11,6 @@ import { connectDB } from "./db/connection1DB.js";
 import cors from "cors";
 connectDB();
 
-const app = express();
 app.use(
   cors({
     origin: "http://localhost:5173",
@@ -30,6 +30,6 @@ app.use("/api/v1/user", userRoute);
 import { errorMiddleware } from "./middlewares/error.middleware.js";
 app.use(errorMiddleware);
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Your app is listening on port ${PORT}`);
 });

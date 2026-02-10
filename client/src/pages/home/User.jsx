@@ -5,7 +5,9 @@ import { useDispatch, useSelector } from "react-redux";
 function User({ userDetails }) {
   const dispatch = useDispatch();
   const { selectedUser } = useSelector((state) => state.userReducer);
+  const { onlineUsers } = useSelector((state) => state.socketReducer);
   // console.log(selectedUser);
+  const isUserOnline = onlineUsers?.includes(userDetails?._id);
   const handleUserClick = () => {
     dispatch(setSelectedUser(userDetails));
   };
@@ -14,7 +16,7 @@ function User({ userDetails }) {
       onClick={handleUserClick}
       className={`flex gap-5 items-center  hover:bg-gray-700 rounded-lg py-1 px-2  ${userDetails?._id === selectedUser?._id && "bg-gray-700"}`}
     >
-      <div className="avatar online">
+      <div className={`avatar ${isUserOnline && " online"}`}>
         <div
           className="  w-12 h-12 rounded-full bg-primary text-white
       grid place-items-center

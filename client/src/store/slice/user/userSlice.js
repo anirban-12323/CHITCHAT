@@ -12,12 +12,13 @@ export const userSlice = createSlice({
   initialState: {
     isAuthenticated: false,
     otherUser: null,
-    selectedUser: null,
+    selectedUser: JSON.parse(localStorage.getItem("selectedUser")),
     screenLoading: true,
     userProfile: null,
   },
   reducers: {
     setSelectedUser: (state, action) => {
+      localStorage.setItem("selectedUser", JSON.stringify(action.payload));
       state.selectedUser = action.payload;
     },
   },
@@ -55,6 +56,7 @@ export const userSlice = createSlice({
     builder.addCase(logoutUserThunk.fulfilled, (state) => {
       state.screenLoading = false;
       state.userProfile = null;
+      ((state.selectedUser = null), (state.otherUser = null));
       state.isAuthenticated = false;
     });
     builder.addCase(logoutUserThunk.rejected, (state) => {
@@ -63,21 +65,16 @@ export const userSlice = createSlice({
 
     // GET PROFILE
     builder.addCase(getUserProfileThunk.pending, (state) => {
-      console.log("PROFILE → pending");
       state.screenLoading = true;
     });
 
     builder.addCase(getUserProfileThunk.fulfilled, (state, action) => {
-      console.log("PROFILE → fulfilled", action.payload);
-
       state.isAuthenticated = true;
       state.userProfile = action.payload?.responseData; // 🔥 THIS WAS MISSING
       state.screenLoading = false;
     });
 
     builder.addCase(getUserProfileThunk.rejected, (state) => {
-      console.log("PROFILE → REJECTED");
-
       state.screenLoading = false;
       state.isAuthenticated = false;
       state.userProfile = null;
@@ -85,20 +82,15 @@ export const userSlice = createSlice({
 
     // GET OTHER USER
     builder.addCase(getOtherUserThunk.pending, (state) => {
-      console.log("OTHER USER → pending");
       state.screenLoading = true;
     });
 
     builder.addCase(getOtherUserThunk.fulfilled, (state, action) => {
-      console.log("OTHER USER → fulfilled", action.payload);
-
       state.otherUser = action.payload?.responseData; // 🔥 THIS WAS MISSING
       state.screenLoading = false;
     });
 
     builder.addCase(getOtherUserThunk.rejected, (state) => {
-      console.log("OTHER USER → REJECTED");
-
       state.screenLoading = false;
     });
   },

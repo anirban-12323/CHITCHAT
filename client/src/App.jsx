@@ -55,14 +55,12 @@ function App() {
   const { isAuthenticated } = useSelector((state) => state.userReducer);
   useEffect(() => {
     (async () => {
-      console.log("🏠 Home mounted - Fetching profile");
       await dispatch(getUserProfileThunk());
     })();
   }, [dispatch]);
 
   useEffect(() => {
     if (isAuthenticated) {
-      console.log("👥 Profile loaded - Fetching other users");
       dispatch(getOtherUserThunk());
     }
   }, [isAuthenticated, dispatch]);

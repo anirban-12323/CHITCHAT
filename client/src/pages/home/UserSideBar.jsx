@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import User from "./User";
 import { useDispatch, useSelector } from "react-redux";
@@ -6,11 +6,31 @@ import { logoutUserThunk } from "../../store/slice/user/userThunk";
 
 function UserSideBar() {
   const dispatch = useDispatch();
+  const [users, setUsers] = useState([]);
+  const [searchValue, setSearchValue] = useState("");
 
   const { otherUser } = useSelector((state) => state.userReducer);
   const handleLogout = async () => {
     await dispatch(logoutUserThunk());
   };
+
+  useEffect(() => {
+    if (!searchValue) {
+      setUsers(otherUser);
+    } else {
+      setUsers(
+        otherUser.filter((user) => {
+          return (
+            user.username.toLowerCase().includes(searchValue.toLowerCase()) ||
+            user.fullname
+              .toLowerCase()
+              .includes(searchValue.toLocaleLowerCase())
+          );
+        }),
+      );
+    }
+  }, [searchValue, otherUser]);
+
   return (
     <div className="max-w-[20rem] w-full  h-screen flex flex-col border-r-white">
       {/* //app name */}
@@ -20,13 +40,18 @@ function UserSideBar() {
       {/* //search box */}
       <div className="p-3">
         <label class="input input-bordered flex items-center gap-2">
-          <input type="text" class="grow" placeholder="Search" />
+          <input
+            type="text"
+            class="grow"
+            placeholder="Search"
+            onChange={(e) => setSearchValue(e.target.value)}
+          />
 
           <FaSearch />
         </label>
       </div>
       <div className="h-full  overflow-y-auto  px-3 flex flex-col gap-3">
-        {otherUser?.map((userDetails) => {
+        {users?.map((userDetails) => {
           return <User key={userDetails._id} userDetails={userDetails} />;
         })}
       </div>
