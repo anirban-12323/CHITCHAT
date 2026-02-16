@@ -64,10 +64,7 @@ function UserSideBar() {
         <div className="flex items-center gap-3">
           <div className="avatar">
             <div className="ring-primary ring-offset-base-100 w-10 rounded-full ring ring-offset-2">
-              <img
-                src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                onClick={handleDpClick}
-              />
+              <img src={userProfile?.avatar} onClick={handleDpClick} />
             </div>
           </div>
           <h2>{userProfile?.username}</h2>

@@ -39,12 +39,23 @@ function MessageContainer() {
           </div>
 
           <div className="h-full overflow-y-auto p-3">
-            {messages?.map((messageDetails) => (
-              <Message
-                key={messageDetails._id}
-                messageDetails={messageDetails}
-              />
-            ))}
+            {messages?.length === 0 ? (
+              <div className="flex justify-center items-center h-full text-gray-400">
+                <div className="text-center">
+                  <h2 className="text-lg font-semibold">
+                    Start a conversation
+                  </h2>
+                  <p className="text-sm">Say hello 👋 and break the ice!</p>
+                </div>
+              </div>
+            ) : (
+              messages?.map((messageDetails) => (
+                <Message
+                  key={messageDetails._id}
+                  messageDetails={messageDetails}
+                />
+              ))
+            )}
           </div>
 
           <SendMessage />

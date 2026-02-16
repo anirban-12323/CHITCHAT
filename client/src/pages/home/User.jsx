@@ -4,7 +4,9 @@ import { useDispatch, useSelector } from "react-redux";
 
 function User({ userDetails }) {
   const dispatch = useDispatch();
-  const { selectedUser } = useSelector((state) => state.userReducer);
+  const { selectedUser, userProfile } = useSelector(
+    (state) => state.userReducer,
+  );
   const { onlineUsers } = useSelector((state) => state.socketReducer);
   // console.log(selectedUser);
   const isUserOnline = onlineUsers?.includes(userDetails?._id);
@@ -23,7 +25,7 @@ function User({ userDetails }) {
       text-lg font-bold leading-none
       select-none"
         >
-          <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+          <img src={userDetails?.avatar} />
         </div>
       </div>
       <div>
