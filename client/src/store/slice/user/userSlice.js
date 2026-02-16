@@ -5,6 +5,7 @@ import {
   logoutUserThunk,
   getUserProfileThunk,
   getOtherUserThunk,
+  updateProfileThunk,
 } from "./userThunk";
 
 export const userSlice = createSlice({
@@ -15,11 +16,15 @@ export const userSlice = createSlice({
     selectedUser: JSON.parse(localStorage.getItem("selectedUser")),
     screenLoading: true,
     userProfile: null,
+    activeScreen: "chat",
   },
   reducers: {
     setSelectedUser: (state, action) => {
       localStorage.setItem("selectedUser", JSON.stringify(action.payload));
       state.selectedUser = action.payload;
+    },
+    setActiveScreen: (state, action) => {
+      state.activeScreen = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -93,7 +98,21 @@ export const userSlice = createSlice({
     builder.addCase(getOtherUserThunk.rejected, (state) => {
       state.screenLoading = false;
     });
+
+    //UPDATE PROFILE
+    builder.addCase(updateProfileThunk.pending, (state, action) => {
+      state.screenLoading = true;
+    });
+
+    builder.addCase(updateProfileThunk.fulfilled, (state, action) => {
+      state.screenLoading = false;
+      console.log(action.payload?.responseData);
+      state.userProfile = action.payload?.responseData;
+    });
+    builder.addCase(updateProfileThunk.rejected, (state, action) => {
+      state.screenLoading = true;
+    });
   },
 });
-export const { setSelectedUser } = userSlice.actions;
+export const { setSelectedUser, setActiveScreen } = userSlice.actions;
 export default userSlice.reducer;

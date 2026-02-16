@@ -5,6 +5,7 @@ import {
   getProfile,
   logout,
   getOtherUsers,
+  updateProfile,
 } from "../controllers/userController.js";
 import {
   isAuthenticated,
@@ -17,4 +18,5 @@ router.post("/login", login);
 router.post("/logout", isAuthenticated, logout);
 router.get("/get-profile", requireAuth, getProfile);
 router.get("/get-other-users", requireAuth, getOtherUsers);
+router.put("/update-profile", requireAuth, updateProfile);
 export default router;

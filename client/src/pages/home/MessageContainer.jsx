@@ -6,9 +6,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { getMessageThunk } from "../../store/slice/message/messageThunk";
 import { setSelectedUser } from "../../store/slice/user/userSlice";
 import SendMessage from "./SendMessage";
+import MyProfile from "./MyProfile";
 
 function MessageContainer() {
-  const { selectedUser } = useSelector((state) => state.userReducer);
+  const { selectedUser, activeScreen } = useSelector(
+    (state) => state.userReducer,
+  );
   const { messages } = useSelector((state) => state.messageReducer);
 
   const dispatch = useDispatch();
@@ -20,7 +23,9 @@ function MessageContainer() {
   }, [selectedUser]);
   return (
     <>
-      {!selectedUser ? (
+      {activeScreen === "profile" ? (
+        <MyProfile />
+      ) : !selectedUser ? (
         <div className="w-full flex items-center justify-center flex-col gap-5">
           <h2>Welcome to CHITCHAT</h2>
           <p className="text-xl">
@@ -33,17 +38,16 @@ function MessageContainer() {
             <User userDetails={selectedUser} />
           </div>
 
-          <div className=" h-full overflow-y-auto p-3">
-            {messages?.map((messageDetails) => {
-              return (
-                <Message
-                  key={messageDetails._id}
-                  messageDetails={messageDetails}
-                />
-              );
-            })}
+          <div className="h-full overflow-y-auto p-3">
+            {messages?.map((messageDetails) => (
+              <Message
+                key={messageDetails._id}
+                messageDetails={messageDetails}
+              />
+            ))}
           </div>
-          <SendMessage></SendMessage>
+
+          <SendMessage />
         </div>
       )}
     </>

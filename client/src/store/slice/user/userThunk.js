@@ -26,6 +26,29 @@ export const loginUserThunk = createAsyncThunk(
     }
   },
 );
+//updateProfile thunk
+export const updateProfileThunk = createAsyncThunk(
+  "users/updateProfile",
+  async ({ fullname, username }, { rejectWithValue, dispatch }) => {
+    try {
+      const response = await axiosInstance.put("/user/update-profile", {
+        fullname,
+        username,
+      });
+
+      toast.success("profile updated successfull");
+
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      const errorOutput = error?.response?.data?.message;
+      toast.error(errorOutput);
+
+      return rejectWithValue(errorOutput);
+    }
+  },
+);
+
 //registerUser Thunk
 export const registerUserThunk = createAsyncThunk(
   "users/registerUser",

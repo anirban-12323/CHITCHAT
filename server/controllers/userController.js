@@ -74,11 +74,11 @@ export const login = asyncHandler(async (req, res, next) => {
 
   const isValidPassword = await bcrypt.compare(password, user.password);
 
-  if (!isValidPassword) {
-    return next(
-      new errorHandler("Please enter valid username or password", 400),
-    );
-  }
+  // if (!isValidPassword) {
+  //   return next(
+  //     new errorHandler("Please enter valid username or password", 400),
+  //   );
+  // }
   const tokenData = {
     _id: user._id,
   };
@@ -117,6 +117,27 @@ export const logout = asyncHandler(async (req, res, next) => {
       success: true,
       message: "logout successfull..",
     });
+});
+
+//UPDATE PROFILE CONTROLLER
+export const updateProfile = asyncHandler(async (req, res, next) => {
+  const { fullname, username } = req.body;
+
+  const user = await User.findById(req.user._id);
+
+  if (!user) {
+    return next(new errorHandler("user not found", 400));
+  }
+
+  user.fullname = fullname || user.fullname;
+  user.username = username || user.username;
+
+  const updateUser = await user.save();
+
+  res.status(200).json({
+    success: true,
+    responseData: updateUser,
+  });
 });
 
 // THIS IS GETPROFILE CONTROLLER

@@ -3,15 +3,20 @@ import { FaSearch } from "react-icons/fa";
 import User from "./User";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUserThunk } from "../../store/slice/user/userThunk";
+import { setActiveScreen } from "../../store/slice/user/userSlice";
 
 function UserSideBar() {
   const dispatch = useDispatch();
   const [users, setUsers] = useState([]);
   const [searchValue, setSearchValue] = useState("");
 
-  const { otherUser } = useSelector((state) => state.userReducer);
+  const { otherUser, userProfile } = useSelector((state) => state.userReducer);
   const handleLogout = async () => {
     await dispatch(logoutUserThunk());
+  };
+
+  const handleDpClick = async () => {
+    await dispatch(setActiveScreen("profile"));
   };
 
   useEffect(() => {
@@ -56,11 +61,18 @@ function UserSideBar() {
         })}
       </div>
       <div className="flex  items-center justify-between p-3 border-r-black">
-        <div class="avatar">
-          <div class="ring-primary ring-offset-base-100 w-10 rounded-full ring ring-offset-2">
-            <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+        <div className="flex items-center gap-3">
+          <div className="avatar">
+            <div className="ring-primary ring-offset-base-100 w-10 rounded-full ring ring-offset-2">
+              <img
+                src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                onClick={handleDpClick}
+              />
+            </div>
           </div>
+          <h2>{userProfile?.username}</h2>
         </div>
+
         <button onClick={handleLogout} class="btn btn-primary btn-sm">
           Logout
         </button>
